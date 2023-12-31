@@ -20,36 +20,29 @@ def on_message(client, userdata, msg):
     print(str(msg.payload))
     if(msg.topic == "esp32/dht/humidity"):
         humidity=float(msg.payload.decode())
-        if(humidity>40):
-            ret= client.publish("house/bulb1","on") 
-        else:
-            ret= client.publish("house/bulb1","off")
-    
     if(msg.topic == "esp32/dht/temperature"):
         temperature=float(msg.payload.decode())
-        if(temperature>28):
-            ret= client.publish("house/bulb2","on") 
-        else:
-            ret= client.publish("house/bulb2","off")
-    
     if(msg.topic == "esp32/soil/molsture"):
         molsture=float(msg.payload.decode())
-        if(molsture>7):
-            ret= client.publish("relay","1") 
-        else:
-            ret= client.publish("relay","0") 
 
-    #c.execute('insert into mqtt_sensors values (?,?,?)', (msg.topic,str(msg.payload),""))
-    # c.execute('insert into mqtt_sensors ("topic","value","pub_date") values (?,?,?)', (msg.topic,str(msg.payload),x))
-    # conn.commit()
-    #print(msg.topic+" "+str(msg.payload))
+        
+    if(molsture>5 and humidity <20 or molsture>8):
+        ret= client.publish("waterrelay","1") 
+    else:
+        ret= client.publish("waterrelay","0")
+
+    if(temperature>35):
+        ret= client.publish("coolerrelay","1") 
+
+    if(temperature<15):
+        ret= client.publish("heaterrelay","1")
+
+    if(temperature>20 and temperature<30):
+        ret= client.publish("coolerrelay","0")
+        ret2= client.publish("heaterrelay","0")
 
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect("localhost", 1883, 60)
-# Blocking call that processes network traffic, dispatches callbacks and
-# handles reconnecting.
-# Other loop*() functions are available that give a threaded interface and a
-# manual interface.
 client.loop_forever()
