@@ -23,7 +23,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("#")
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    global humidit
+    global humidity
     global temperature
     global molsture
     global heater
