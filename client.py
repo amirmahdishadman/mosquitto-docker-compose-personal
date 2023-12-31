@@ -7,9 +7,6 @@ import paho.mqtt.client as mqtt
 #conn.commit()
 #exit()
 # The callback for when the client receives a CONNACK response from the server.
-humidity=0
-temperature=0
-molsture=0
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code ")
 
@@ -45,6 +42,9 @@ def on_message(client, userdata, msg):
         ret2= client.publish("heaterrelay","0")
 
 client = mqtt.Client()
+humidity=0
+temperature=0
+molsture=0
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect("localhost", 1883, 60)
