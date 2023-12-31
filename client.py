@@ -44,7 +44,7 @@ def on_message(client, userdata, msg):
         ret= client.publish("waterrelay","1")
         water=1
 
-    if(molsture<5):
+    if(molsture<5 and water == 1):
         ret= client.publish("waterrelay","0")
         water=0
 
