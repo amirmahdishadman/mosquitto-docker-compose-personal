@@ -8,9 +8,9 @@ import paho.mqtt.client as mqtt
 #conn.commit()
 #exit()
 # The callback for when the client receives a CONNACK response from the server.
-global humidit
-global temperature
-global molsture
+humidit=0
+temperature=0
+molsture=0
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code ")
@@ -20,6 +20,9 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("#")
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
+    global humidit
+    global temperature
+    global molsture
     x = datetime.datetime.now()
     print(msg.topic)
     print(str(msg.payload))
