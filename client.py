@@ -40,11 +40,11 @@ def on_message(client, userdata, msg):
         molsture=float(msg.payload.decode())
 
     
-    if(molsture>6 and humidity <20 or molsture>8 and water==0):
+    if((molsture>7 and humidity <20 or molsture>8) and water==0):
         ret= client.publish("waterrelay","1")
         water=1
 
-    if(molsture<5 and water == 1):
+    if(molsture<6 and water == 1):
         ret= client.publish("waterrelay","0")
         water=0
 
