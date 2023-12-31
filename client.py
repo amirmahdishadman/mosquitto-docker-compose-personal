@@ -12,6 +12,9 @@ humidit=0
 temperature=0
 molsture=0
 
+heater=0
+water=0
+coller=0
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code ")
 
@@ -23,6 +26,9 @@ def on_message(client, userdata, msg):
     global humidit
     global temperature
     global molsture
+    global heater
+    global water
+    global coller
     x = datetime.datetime.now()
     print(msg.topic)
     print(str(msg.payload))
@@ -33,19 +39,21 @@ def on_message(client, userdata, msg):
     if(msg.topic == "esp32/soil/molsture"):
         molsture=float(msg.payload.decode())
 
-        
+    
     if(molsture>5 and humidity <20 or molsture>8):
-        ret= client.publish("waterrelay","1") 
+        ret= client.publish("waterrelay","1")
     else:
         ret= client.publish("waterrelay","0")
 
-    if(temperature>35):
+    if(temperature>35 and coller==0):
         ret= client.publish("coolerrelay","1") 
+        coller=1
 
-    if(temperature<15):
+    if(temperature<15 and heater==0):
         ret= client.publish("heaterrelay","1")
+        heater=1
 
-    if(temperature>20 and temperature<30):
+    if(temperature>20 and temperature<30 and (heater==1 or coller==1)):
         ret= client.publish("coolerrelay","0")
         ret2= client.publish("heaterrelay","0")
 
