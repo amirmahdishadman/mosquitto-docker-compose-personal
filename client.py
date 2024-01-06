@@ -17,6 +17,7 @@ light=0
 heater=0
 water=0
 coller=0
+its_day=1
 day=datetime.now()
 night=datetime.now()
 time_difference_in_minutes=0
@@ -34,7 +35,7 @@ def turn_light_on(difference_in_seconds,clinet):
     global day
     global night
     global time_difference_in_minutes
-
+    global its_day
     ret= client.publish("light","1")
     light=1
     print("turn on published.............")
@@ -63,6 +64,7 @@ def on_message(client, userdata, msg):
     global day
     global night
     global time_difference_in_minutes
+    global its_day
     print(msg.topic)
     print(str(msg.payload))
     if(msg.topic == "esp32/dht/humidity"):
@@ -97,6 +99,7 @@ def on_message(client, userdata, msg):
 
     light_lenth=10
     if(light_sensor<5 and light ==0): #its night
+        its_day=0
         night = datetime.now()
         time_difference = night - day
         print("time diffrence .........................")
@@ -105,10 +108,11 @@ def on_message(client, userdata, msg):
             print("true if ................................ function must run")
             turn_light_on(light_lenth-time_difference.total_seconds(),client)
 
-    if(light_sensor>5): #its day
+    if(light_sensor>5 and its_day==0): #its day
         day = datetime.now()
         ret= client.publish("light","0")
         light=0
+        its_day=1
 
 
 
