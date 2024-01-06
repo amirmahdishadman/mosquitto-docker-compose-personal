@@ -1,6 +1,7 @@
 import datetime
 import paho.mqtt.client as mqtt
-
+from datetime import datetime
+import time
 # import sqlite3
 # conn = sqlite3.connect('db.sqlite3')
 # c = conn.cursor()
@@ -16,6 +17,30 @@ light=0
 heater=0
 water=0
 coller=0
+day=0
+night=0
+time_difference_in_minutes=0
+
+def turn_light_on(difference_in_seconds,clinet):
+    global humidity
+    global temperature
+    global molsture
+    global light_sensor
+    global light
+    global heater
+    global water
+    global coller
+    global day
+    global night
+    global time_difference_in_minutes
+
+    ret= client.publish("light","1")
+    light=1
+    time.sleep(difference_in_seconds)
+    ret= client.publish("light","0")
+    light=0
+
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code ")
 
@@ -32,6 +57,9 @@ def on_message(client, userdata, msg):
     global heater
     global water
     global coller
+    global day
+    global night
+    global time_difference_in_minutes
     x = datetime.datetime.now()
     print(msg.topic)
     print(str(msg.payload))
@@ -65,12 +93,21 @@ def on_message(client, userdata, msg):
         ret= client.publish("coolerrelay","0")
         ret2= client.publish("heaterrelay","0")
 
+    light_lenth=10
     if(light_sensor<5 and light ==0):
-        ret= client.publish("light","1")
-        light=1
-    if(light_sensor>5) and light==1:
+        night = datetime.now()
+        time_difference = night -day
+        if(time_difference.total_seconds()>0 and time_difference.total_seconds()<light_lenth):
+            turn_light_on(light_lenth-time_difference.total_seconds(),client)
+
+    if(light_sensor>5 and light==1):
+        day = datetime.now()
         ret= client.publish("light","0")
         light=0
+
+
+
+
 
 client = mqtt.Client()
 client.on_connect = on_connect
