@@ -36,14 +36,8 @@ def turn_light_on(difference_in_seconds,client):
     global night
     global time_difference_in_minutes
     global its_day
-    ret= client.publish("light","1")
-    light=1
-    print("turn on published.............")
-    
-    time.sleep(difference_in_seconds)
 
-    ret= client.publish("light","0")
-    light=0
+    
 
 
 def on_connect(client, userdata, flags, rc):
@@ -107,7 +101,12 @@ def on_message(client, userdata, msg):
         print(time_difference.total_seconds())
         if(time_difference.total_seconds()>0 and time_difference.total_seconds()<light_lenth):
             print("true if ................................ function must run")
-            turn_light_on(light_lenth-time_difference.total_seconds(),client)
+            ret= client.publish("light","1")
+            light=1
+            print("turn on published.............")
+            time.sleep(light_lenth-time_difference.total_seconds())
+            ret= client.publish("light","0")
+            light=0
 
     if(light_sensor>5 and its_day==0): #its day
         day = datetime.now()
