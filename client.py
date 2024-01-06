@@ -22,7 +22,7 @@ day=datetime.now()
 night=datetime.now()
 time_difference_in_minutes=0
 
-def turn_light_on(difference_in_seconds,clinet):
+def turn_light_on(difference_in_seconds,client):
     print("in function--------------------------------")
     global humidity
     global temperature
@@ -39,6 +39,7 @@ def turn_light_on(difference_in_seconds,clinet):
     ret= client.publish("light","1")
     light=1
     print("turn on published.............")
+    
     time.sleep(difference_in_seconds)
 
     ret= client.publish("light","0")
