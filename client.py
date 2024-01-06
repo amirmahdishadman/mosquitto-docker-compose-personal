@@ -20,24 +20,8 @@ coller=0
 its_day=1
 day=datetime.now()
 night=datetime.now()
-time_difference_in_minutes=0
-
-def turn_light_on(difference_in_seconds,client):
-    print("in function--------------------------------")
-    global humidity
-    global temperature
-    global molsture
-    global light_sensor
-    global light
-    global heater
-    global water
-    global coller
-    global day
-    global night
-    global time_difference_in_minutes
-    global its_day
-
-    
+difference_in_seconds=0
+in_night_light=0
 
 
 def on_connect(client, userdata, flags, rc):
@@ -58,8 +42,10 @@ def on_message(client, userdata, msg):
     global coller
     global day
     global night
-    global time_difference_in_minutes
     global its_day
+    global difference_in_seconds
+    global in_night_light
+
     print(msg.topic)
     print(str(msg.payload))
     if(msg.topic == "esp32/dht/humidity"):
@@ -92,28 +78,34 @@ def on_message(client, userdata, msg):
         ret= client.publish("coolerrelay","0")
         ret2= client.publish("heaterrelay","0")
 
-    light_lenth=10
-    if(light_sensor<5 and light ==0): #its night
+    light_suitable_lenth=10#sec
+
+    if(light_sensor<5 and light ==0 and its_day==1 and in_night_light==0): #its night
         its_day=0
         night = datetime.now()
         time_difference = night - day
         print("time diffrence .........................")
         print(time_difference.total_seconds())
-        if(time_difference.total_seconds()>0 and time_difference.total_seconds()<light_lenth):
+        if(time_difference.total_seconds()>0 and time_difference.total_seconds()<light_suitable_lenth):
             print("true if ................................ function must run")
-            ret= client.publish("light","1")
-            light=1
-            print("turn on published.............")
-            time.sleep(light_lenth-time_difference.total_seconds())
-            ret= client.publish("light","0")
-            light=0
+            difference_in_seconds=light_suitable_lenth-time_difference.total_seconds()
+            in_night_light=1
 
-    if(light_sensor>5 and its_day==0): #its day
+    if(light_sensor>5 and its_day==0 and in_night_light==0): #its day
         day = datetime.now()
         ret= client.publish("light","0")
         light=0
         its_day=1
 
+    if(in_night_light==1 and difference_in_seconds>0):
+        ret= client.publish("light","1")
+        light=1
+        time.sleep(1)
+        difference_in_seconds-=1
+    if(in_night_light==1 and difference_in_seconds==0):
+        ret= client.publish("light","0")
+        light=0
+        in_night_light=0
 
 
 
