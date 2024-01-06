@@ -102,7 +102,8 @@ def on_message(client, userdata, msg):
         light=1
         time.sleep(1)
         difference_in_seconds-=1
-    if(in_night_light==1 and difference_in_seconds==0):
+        print("diffrence in secound =",difference_in_seconds)
+    if(in_night_light==1 and difference_in_seconds<=0):
         ret= client.publish("light","0")
         light=0
         in_night_light=0
