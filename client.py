@@ -11,7 +11,7 @@ import paho.mqtt.client as mqtt
 humidit=0
 temperature=0
 molsture=0
-
+light=0
 heater=0
 water=0
 coller=0
