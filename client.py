@@ -17,8 +17,8 @@ light=0
 heater=0
 water=0
 coller=0
-day=0
-night=0
+day=datetime.now()
+night=datetime.now()
 time_difference_in_minutes=0
 
 def turn_light_on(difference_in_seconds,clinet):
@@ -95,7 +95,7 @@ def on_message(client, userdata, msg):
     light_lenth=10
     if(light_sensor<5 and light ==0):
         night = datetime.now()
-        time_difference = night -day
+        time_difference = night - day
         if(time_difference.total_seconds()>0 and time_difference.total_seconds()<light_lenth):
             turn_light_on(light_lenth-time_difference.total_seconds(),client)
 
