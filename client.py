@@ -100,6 +100,7 @@ def on_message(client, userdata, msg):
         print("time diffrence .........................")
         print(time_difference.total_seconds())
         if(time_difference.total_seconds()>0 and time_difference.total_seconds()<light_lenth):
+            print("true if ................................ function must run")
             turn_light_on(light_lenth-time_difference.total_seconds(),client)
 
     if(light_sensor>5 and light==1): #its day
