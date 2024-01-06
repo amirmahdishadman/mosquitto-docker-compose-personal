@@ -105,7 +105,7 @@ def on_message(client, userdata, msg):
             print("true if ................................ function must run")
             turn_light_on(light_lenth-time_difference.total_seconds(),client)
 
-    if(light_sensor>5 and light==1): #its day
+    if(light_sensor>5): #its day
         day = datetime.now()
         ret= client.publish("light","0")
         light=0
