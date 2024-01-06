@@ -11,7 +11,8 @@ import paho.mqtt.client as mqtt
 humidit=0
 temperature=0
 molsture=0
-light=0
+light_sensor=0
+lgiht=0
 heater=0
 water=0
 coller=0
@@ -26,6 +27,7 @@ def on_message(client, userdata, msg):
     global humidity
     global temperature
     global molsture
+    global light_sensor
     global light
     global heater
     global water
@@ -40,7 +42,7 @@ def on_message(client, userdata, msg):
     if(msg.topic == "esp32/soil/molsture"):
         molsture=float(msg.payload.decode())
     if(msg.topic == "esp32/light"):
-        light=float(msg.payload.decode())
+        light_sensor=float(msg.payload.decode())
 
     
     if((molsture>7 and humidity <20 or molsture>8) and water==0):
@@ -63,10 +65,12 @@ def on_message(client, userdata, msg):
         ret= client.publish("coolerrelay","0")
         ret2= client.publish("heaterrelay","0")
 
-    if(light<5):
+    if(light_sensor<5 and light ==0):
         ret= client.publish("light","1")
-    if(light>5):
+        light=1
+    if(light_sensor>5) and light==1:
         ret= client.publish("light","0")
+        light=0
 
 client = mqtt.Client()
 client.on_connect = on_connect
