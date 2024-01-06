@@ -37,7 +37,9 @@ def turn_light_on(difference_in_seconds,clinet):
 
     ret= client.publish("light","1")
     light=1
+    print("turn on published.............")
     time.sleep(difference_in_seconds)
+
     ret= client.publish("light","0")
     light=0
 
