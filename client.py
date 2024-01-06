@@ -22,6 +22,7 @@ night=datetime.now()
 time_difference_in_minutes=0
 
 def turn_light_on(difference_in_seconds,clinet):
+    print("in function--------------------------------")
     global humidity
     global temperature
     global molsture
@@ -93,13 +94,15 @@ def on_message(client, userdata, msg):
         ret2= client.publish("heaterrelay","0")
 
     light_lenth=10
-    if(light_sensor<5 and light ==0):
+    if(light_sensor<5 and light ==0): #its night
         night = datetime.now()
         time_difference = night - day
+        print("time diffrence .........................")
+        print(time_difference.total_seconds())
         if(time_difference.total_seconds()>0 and time_difference.total_seconds()<light_lenth):
             turn_light_on(light_lenth-time_difference.total_seconds(),client)
 
-    if(light_sensor>5 and light==1):
+    if(light_sensor>5 and light==1): #its day
         day = datetime.now()
         ret= client.publish("light","0")
         light=0
