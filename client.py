@@ -60,7 +60,6 @@ def on_message(client, userdata, msg):
     global day
     global night
     global time_difference_in_minutes
-    x = datetime.datetime.now()
     print(msg.topic)
     print(str(msg.payload))
     if(msg.topic == "esp32/dht/humidity"):
