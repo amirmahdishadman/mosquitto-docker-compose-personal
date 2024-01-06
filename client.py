@@ -78,9 +78,9 @@ def on_message(client, userdata, msg):
         ret= client.publish("coolerrelay","0")
         ret2= client.publish("heaterrelay","0")
 
-    light_suitable_lenth=10#sec
+    light_suitable_lenth=20#sec
 
-    if(light_sensor<5 and light ==0 and its_day==1 and in_night_light==0): #its night
+    if(light_sensor<3 and light ==0 and its_day==1 and in_night_light==0): #its night
         its_day=0
         night = datetime.now()
         time_difference = night - day
@@ -91,7 +91,7 @@ def on_message(client, userdata, msg):
             difference_in_seconds=light_suitable_lenth-time_difference.total_seconds()
             in_night_light=1
 
-    if(light_sensor>5 and its_day==0 and in_night_light==0): #its day
+    if(light_sensor>3 and its_day==0 and in_night_light==0): #its day
         day = datetime.now()
         ret= client.publish("light","0")
         light=0
